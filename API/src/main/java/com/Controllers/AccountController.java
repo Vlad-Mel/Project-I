@@ -2,15 +2,16 @@ package com.Controllers;
 
 import com.DTOs.EmployeeDto;
 import com.Database.EmployeeDAO;
+import com.ErrorHandlers.ErrorMessage;
 import com.Models.Employee;
-import com.Services.PasswordService;
-import com.errorHandlers.ErrorMessage;
+import com.Utilities.PasswordUtility;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
 public class AccountController {
 
+    /* Database Access Object */
     EmployeeDAO employeeDAO = new EmployeeDAO();
 
     public void register(Context ctx) {
@@ -54,7 +55,7 @@ public class AccountController {
 
             /* Extract actual and provided encrypted passwords */
             String actualPwd = employee.getEncryptedPassword();
-            String providedPwd = PasswordService.generateEncryptedPassword(employeeDto.password, employee.getPasswordSalt());
+            String providedPwd = PasswordUtility.generateEncryptedPassword(employeeDto.password, employee.getPasswordSalt());
 
             /* Compares two encrypted passwords */
             if (actualPwd.equals(providedPwd)) {
@@ -75,6 +76,7 @@ public class AccountController {
 
     public void logout(Context ctx) {
         try {
+            /* Trying to remove JWT token from Cookies */
             ctx.removeCookie("token");
             ctx.status(HttpStatus.OK);
         } catch (Exception e) {

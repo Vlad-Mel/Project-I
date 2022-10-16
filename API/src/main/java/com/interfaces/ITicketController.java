@@ -1,4 +1,4 @@
-package com.interfaces;
+package com.Interfaces;
 
 import io.javalin.http.Context;
 

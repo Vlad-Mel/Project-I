@@ -4,6 +4,7 @@
         "apibuilder",
         "DTOs",
         "Hmac",
-        "javalin"
+        "javalin",
+        "Jwts"
     ]
 }

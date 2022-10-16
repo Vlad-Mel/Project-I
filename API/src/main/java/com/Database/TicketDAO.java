@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 import com.DTOs.TicketDBDto;
 import com.Models.Ticket;
-import com.utility.ConnectionFactory;
+import com.Utilities.ConnectionFactory;
 
 public class TicketDAO extends ConnectionFactory {
  

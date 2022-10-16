@@ -1,4 +1,4 @@
-package com.Services;
+package com.Utilities;
 
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.SecretKeyFactory;
@@ -7,7 +7,7 @@ import java.util.Base64;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class PasswordService {
+public class PasswordUtility {
     final static private int ITERATION_COUNT = 10000;
     final static private int KEY_LENGTH = 256;
     

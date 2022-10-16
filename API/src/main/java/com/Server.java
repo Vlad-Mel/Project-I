@@ -1,15 +1,16 @@
 package com;
 
 import io.javalin.Javalin;
-import io.javalin.http.Context;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import com.Controllers.AccountController;
 import com.Controllers.EmployeeController;
+import com.Controllers.SecurityController;
 import com.Controllers.TicketController;
-import com.Models.Employee;
-import com.Services.TokenService;
+import com.ErrorHandlers.ErrorMessage;
+import com.Services.CookieService;
+
 
 public class Server {
 
@@ -33,21 +34,20 @@ public class Server {
             path("api", () -> {
 
                 path("employees", () -> {
-                    before(ctx -> {  
-                        System.out.println(ctx.cookie("token"));
-                    });
-
 
                     get(employeeController::getAllEmployees);
 
-
                     path("{id}", () -> {
+                        before(SecurityController::authorizedRoute);
+    
                         get(employeeController::getAnEmployee);
                         post(employeeController::updateAnEmployee);
                         delete(employeeController::deleteAnEmployee);
 
 
                         path("tickets", () -> {
+                            before(SecurityController::ownersRoute);
+
                             get(ticketController::getEmployeeTickets);
                             post(ticketController::createTicket);
                         });
@@ -61,11 +61,8 @@ public class Server {
 
                 path("login", () -> {
                     post(accountController::login);
-                    after(ctx -> {
-                        System.out.println(ctx.result());
-                        // ctx.cookie("token",new TokenService().createToken(ctx.result()));
-                        // ctx.res();
-                    });
+                    
+                    after(CookieService::grantCookie);
                 });
 
                 path("logout", () -> {
@@ -73,7 +70,13 @@ public class Server {
                 });
 
                 path("tickets", () -> {
+                    before(SecurityController::onlyManagersRoute);
+
                     get(ticketController::getAllTickets);
+                });
+
+                path("unauthorized", () -> {
+                    get(ctx -> ctx.json(new ErrorMessage("Not authorized")));
                 });
             });
         });

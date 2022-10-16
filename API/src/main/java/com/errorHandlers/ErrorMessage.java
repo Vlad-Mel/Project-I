@@ -1,8 +1,8 @@
-package com.errorHandlers;
+package com.ErrorHandlers;
 
 public class ErrorMessage {
-    private String message;
     private String error;
+    private String message;
 
     public ErrorMessage() {}
 

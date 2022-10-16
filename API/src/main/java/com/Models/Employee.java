@@ -4,10 +4,11 @@ import java.util.Arrays;
 
 import com.DTOs.EmployeeDBDto;
 import com.DTOs.EmployeeDto;
-import com.Services.PasswordService;
+import com.Utilities.PasswordUtility;
 
 public class Employee {
  
+    private int id = 0;
     private String login;
     private String encryptedPassword;
     private byte[] passwordSalt;
@@ -16,6 +17,7 @@ public class Employee {
 
 
     public Employee(EmployeeDBDto employee) {
+        this.id = employee.id;
         this.login = employee.login;
         this.encryptedPassword = employee.encryptedPassword;
         this.passwordSalt = employee.passwordSalt;
@@ -26,17 +28,17 @@ public class Employee {
     }
 
     public Employee(String username, String password)  {
-        this.passwordSalt = PasswordService.generatePasswordSalt();
+        this.passwordSalt = PasswordUtility.generatePasswordSalt();
         this.login = username;
         setEncryptedPassword(password);
     }
 
 
     public void setEncryptedPassword(String password) {
-        this.encryptedPassword = PasswordService.generateEncryptedPassword(password, passwordSalt);
+        this.encryptedPassword = PasswordUtility.generateEncryptedPassword(password, passwordSalt);
     }
 
-
+    public int getId() { return this.id; }
     public byte[] getPasswordSalt() { return passwordSalt; }
     public String getLogin() { return login; }
     public String getRole() { return role; }

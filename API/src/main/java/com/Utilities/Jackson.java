@@ -1,4 +1,4 @@
-package com.utility;
+package com.Utilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Jackson {
 
     static public String objectToString(Object obj) {
-        
         ObjectMapper objMapper = new ObjectMapper();
 
         try { 

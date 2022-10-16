@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import com.DTOs.EmployeeDBDto;
+import com.Interfaces.IEmployeeDAO;
 import com.Models.Employee;
-import com.interfaces.IEmployeeDAO;
-import com.utility.ConnectionFactory;
+import com.Utilities.ConnectionFactory;
 
 
 public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
@@ -24,11 +24,12 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
         try {
             stmt = establishConnection().createStatement();
             set = stmt.executeQuery(
-                "SELECT employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role FROM employee"
+                "SELECT employee_id, employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role FROM employee"
             );
             
             while (set.next()) {
                 EmployeeDBDto employeeDBDto = new EmployeeDBDto(
+                    set.getInt("employee_id"),
                     set.getString("employee_login"),
                     set.getString("employee_encryptedPassword"),
                     set.getBytes("employee_passwordSalt"),
@@ -56,7 +57,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
      */
     public Employee findAnEmployee(int id) {
        
-        String SQL = "SELECT employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role " +
+        String SQL = "SELECT employee_id, employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role " +
                         "FROM employee "+
                         "WHERE employee_id = ?";
         Connection connection = establishConnection();
@@ -70,6 +71,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
 
             if (set.next()) {
             EmployeeDBDto employeeDBDto = new EmployeeDBDto(
+                    set.getInt("employee_id"),
                     set.getString("employee_login"),
                     set.getString("employee_encryptedPassword"),
                     set.getBytes("employee_passwordSalt"),
@@ -95,7 +97,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
      */
     public Employee findAnEmployee(String login) {
 
-        String SQL = "SELECT employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role " +
+        String SQL = "SELECT employee_id, employee_login, employee_encryptedPassword, employee_passwordSalt, employee_role " +
                         "FROM employee "+
                         "WHERE lower(employee_login) = lower(?)";
         Connection connection = establishConnection();
@@ -109,6 +111,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
 
             if (set.next()) {
             EmployeeDBDto employeeDBDto = new EmployeeDBDto(
+                    set.getInt("employee_id"),
                     set.getString("employee_login"),
                     set.getString("employee_encryptedPassword"),
                     set.getBytes("employee_passwordSalt"),

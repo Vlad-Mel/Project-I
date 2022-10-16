@@ -1,4 +1,4 @@
-package com.utility;
+package com.Utilities;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class ApplicationProperties {
         FileReader reader = null;
 
             try {
-                reader = new FileReader("./src/main/resources/app.properties");
+                reader = new FileReader("./src/main/resources/application.properties");
                 props.load(reader);
                 return props.getProperty(property);
             } catch (java.io.IOException e) {
