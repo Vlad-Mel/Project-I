@@ -6,15 +6,17 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 import com.Controllers.AccountController;
 import com.Controllers.EmployeeController;
+import com.Controllers.ManagerController;
 import com.Controllers.SecurityController;
 import com.Controllers.TicketController;
+import com.Database.InitializationDAO;
 import com.ErrorHandlers.ErrorMessage;
 import com.Services.CookieService;
 
 
 public class Server {
 
-    static Javalin app = Javalin.create().start(7070); 
+    static private Javalin app = Javalin.create().start(7070); 
     
     static {
         Runtime.getRuntime().addShutdownHook(new Thread() { 
@@ -25,10 +27,11 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        
+
         EmployeeController employeeController = new EmployeeController();
         AccountController accountController = new AccountController();
         TicketController ticketController = new TicketController();
+        ManagerController managerController = new ManagerController();
 
         app.routes(() -> {
             path("api", () -> {
@@ -41,8 +44,8 @@ public class Server {
                         before(SecurityController::authorizedRoute);
     
                         get(employeeController::getAnEmployee);
-                        post(employeeController::updateAnEmployee);
-                        delete(employeeController::deleteAnEmployee);
+                        // post(employeeController::updateAnEmployee);
+                        // delete(employeeController::deleteAnEmployee);
 
 
                         path("tickets", () -> {
@@ -72,7 +75,9 @@ public class Server {
                 path("tickets", () -> {
                     before(SecurityController::onlyManagersRoute);
 
-                    get(ticketController::getAllTickets);
+                    get(ticketController::getAllPendingTickets);
+                    post(managerController::updateTicketStatus);
+
                 });
 
                 path("unauthorized", () -> {
@@ -81,5 +86,13 @@ public class Server {
             });
         });
         
+    }
+
+    /* Initialization of the tables and populating them with some records. */
+    private static void initialization() {
+        InitializationDAO initializationDAO = new InitializationDAO();
+
+        initializationDAO.initializeTables();
+        initializationDAO.populateTables();
     }
 }

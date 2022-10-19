@@ -1,5 +1,7 @@
 package com.Controllers;
 
+import java.util.LinkedList;
+
 import com.DTOs.TicketDto;
 import com.Database.EmployeeDAO;
 import com.Database.TicketDAO;
@@ -29,8 +31,20 @@ public class TicketController implements ITicketController {
                 ctx.json(new ErrorMessage("User does not exist."));
                 return;
             }
-            String author = employee.getLogin();
+            
+            if (ticketDto.amount <= 0 ) {
+                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.json(new ErrorMessage("The reimbursement cost cannot be less or equal to 0."));
+                return;
+            }
 
+            if (ticketDto.description.length() < 5 ) {
+                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.json(new ErrorMessage("The description is too short. It can be at least 5 symbols of length."));
+                return;
+            }
+
+            String author = employee.getLogin();
             Ticket ticket = new Ticket(ticketDto, author);
             ticketDAO.addTicket(ticket);
 
@@ -45,6 +59,16 @@ public class TicketController implements ITicketController {
 
     public void getAllTickets(Context ctx) {
         ctx.json(ticketDAO.allTickets());
+    }
+
+    public void getAllPendingTickets(Context ctx) {
+        LinkedList<Ticket> tickets = ticketDAO.allTicketsWhere("pending");
+        if (!tickets.isEmpty()) {
+            ctx.status(HttpStatus.OK);
+            ctx.json(tickets);
+            return;
+        }
+        ctx.json(new ErrorMessage("No more pending request tickets left", "notification"));
     }
 
     public void getEmployeeTickets(Context ctx) {

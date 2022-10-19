@@ -5,13 +5,14 @@ import com.Database.EmployeeDAO;
 import com.ErrorHandlers.ErrorMessage;
 import com.Models.Employee;
 import com.Utilities.PasswordUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
 public class AccountController {
 
-    /* Database Access Object */
+    /* Database Access Object of Employee */
     EmployeeDAO employeeDAO = new EmployeeDAO();
 
     public void register(Context ctx) {
@@ -19,9 +20,16 @@ public class AccountController {
         try {
             EmployeeDto employeeDto = ctx.bodyAsClass(EmployeeDto.class);
 
-            /* If a user already exists in database return exception */
+            /* If a user already exists in database return */
             if (employeeDAO.findAnEmployee(employeeDto.login) != null) {
+                ctx.status(HttpStatus.BAD_REQUEST);
                 ctx.json(new ErrorMessage("User already exists in Database"));
+                return;
+            }
+
+            if (employeeDto.login.isEmpty() || employeeDto.password.isEmpty()) {
+                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.json(new ErrorMessage("Login and/or password field is/are empty."));
                 return;
             }
             
@@ -76,7 +84,7 @@ public class AccountController {
 
     public void logout(Context ctx) {
         try {
-            /* Trying to remove JWT token from Cookies */
+            /* Trying to remove JWT token from Cookie storage */
             ctx.removeCookie("token");
             ctx.status(HttpStatus.OK);
         } catch (Exception e) {

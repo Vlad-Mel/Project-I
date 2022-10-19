@@ -13,8 +13,8 @@ public class SecurityController {
             /* If user is not authenticated. Send to unauthorized route */
             if (employee == null) ctx.redirect("/api/unauthorized");
 
-            /* If a user is manager. Allow it anything. */
-            if (employee.getRole().equals("Manager")) return;
+            /* If a user is manager. Allow GET request only. Not allow publish ticket from someone's name */
+            if (employee.getRole().equals("Manager") && ctx.method().toString().equals("GET")) return;
 
             /* A user cannot delete or update anything that do not belong to him. */
             int employeeId = Integer.parseInt(ctx.pathParam("id"));

@@ -1,16 +1,21 @@
 package com.Models;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import com.DTOs.EmployeeDBDto;
 
 public class Manager extends Employee {
 
     final public String role;
 
-    public Manager(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public String getRole() { return role; }
+
+    public Manager(String username, String password) {
         super(username, password);
         this.role = "Manager";
     }
 
+    public Manager(EmployeeDBDto employeeDBDto) {
+        super(employeeDBDto);
+        this.role = "Manager";
+    }
 
 }

@@ -19,7 +19,5 @@ public class CookieService {
             EmployeeDBDto employeeDBDto = new JavalinJackson().fromJsonString(ctx.result(), EmployeeDBDto.class);
             ctx.cookie("token", JWToken.createToken(employeeDBDto));
         }
-        
-    
     }
 }

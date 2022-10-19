@@ -2,6 +2,7 @@ package com.Utilities;
 
 import com.DTOs.EmployeeDBDto;
 import com.Models.Employee;
+import com.Models.Manager;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -48,7 +49,7 @@ public class JWToken {
                             .getBody()
                             .get("employee", EmployeeDBDto.class);
 
-            return new Employee(result);
+            return result.role.equals("Employee") ? new Employee(result) : new Manager(result);
         } 
         catch (SignatureException e) { 
             e.printStackTrace();

@@ -6,7 +6,10 @@ import java.util.Date;
 import com.DTOs.TicketDBDto;
 import com.DTOs.TicketDto;
 
+
 public class Ticket {
+
+    private int id;
 
     private String status;
     private String author;
@@ -30,6 +33,7 @@ public class Ticket {
     public Ticket(TicketDto ticketDto, String author) {this(author, ticketDto.description, ticketDto.amount);}
 
     public Ticket(TicketDBDto ticket) {
+        this.id = ticket.id;
         this.status = ticket.status;
         this.author = ticket.author;
         this.datePublished = ticket.datePublished;
@@ -43,17 +47,11 @@ public class Ticket {
     public String getDescription() { return description; }
     public String getDatePublished() { return datePublished; }
     public double getAmount() { return amount; }
+    public int getId() { return id; }
+
 
     
-    public void setStatus(String status) {
-        String lowerCaseStatus = status.toLowerCase();
-
-        if (lowerCaseStatus != "approved" || lowerCaseStatus != "denied") 
-            throw new RuntimeException("The status can be approved or denied");
-        
-        this.status = lowerCaseStatus;
-    }
-    
+    public void setStatus(TicketStatus status) { this.status = status.getStatus(); }
     public void setDescription(String description) { this.description = description; }
 
     @Override

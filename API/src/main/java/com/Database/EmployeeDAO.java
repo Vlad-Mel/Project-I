@@ -10,10 +10,11 @@ import java.util.LinkedList;
 import com.DTOs.EmployeeDBDto;
 import com.Interfaces.IEmployeeDAO;
 import com.Models.Employee;
+import com.Models.Manager;
 import com.Utilities.ConnectionFactory;
 
 
-public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
+public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO  {
 
     public LinkedList<Employee> allEmployees() {
         Connection connection = establishConnection();
@@ -36,7 +37,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
                     set.getString("employee_role")
                 );
                 
-                employees.add(new Employee(employeeDBDto));
+                employees.add(employeeDBDto.role.equals("Employee") ? new Employee(employeeDBDto) : new Manager(employeeDBDto));
             }
             return employees;
             
@@ -70,15 +71,15 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
             set = findEmployee.executeQuery(); 
 
             if (set.next()) {
-            EmployeeDBDto employeeDBDto = new EmployeeDBDto(
-                    set.getInt("employee_id"),
-                    set.getString("employee_login"),
-                    set.getString("employee_encryptedPassword"),
-                    set.getBytes("employee_passwordSalt"),
-                    set.getString("employee_role")
-            );
+                EmployeeDBDto employeeDBDto = new EmployeeDBDto(
+                        set.getInt("employee_id"),
+                        set.getString("employee_login"),
+                        set.getString("employee_encryptedPassword"),
+                        set.getBytes("employee_passwordSalt"),
+                        set.getString("employee_role")
+                );
 
-            return new Employee(employeeDBDto);
+                return employeeDBDto.role.equals("Employee") ? new Employee(employeeDBDto) : new Manager(employeeDBDto);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         finally {
@@ -110,15 +111,15 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
             set = findEmployee.executeQuery(); 
 
             if (set.next()) {
-            EmployeeDBDto employeeDBDto = new EmployeeDBDto(
-                    set.getInt("employee_id"),
-                    set.getString("employee_login"),
-                    set.getString("employee_encryptedPassword"),
-                    set.getBytes("employee_passwordSalt"),
-                    set.getString("employee_role")
-            );
+                EmployeeDBDto employeeDBDto = new EmployeeDBDto(
+                        set.getInt("employee_id"),
+                        set.getString("employee_login"),
+                        set.getString("employee_encryptedPassword"),
+                        set.getBytes("employee_passwordSalt"),
+                        set.getString("employee_role")
+                );
 
-            return new Employee(employeeDBDto);
+                return employeeDBDto.role.equals("Employee") ? new Employee(employeeDBDto) : new Manager(employeeDBDto);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         finally {
@@ -140,23 +141,46 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO {
     public boolean addEmployee(Employee employee) {
         Connection connection = establishConnection();
         PreparedStatement addEmployee = null;
-
+    
         try {
             addEmployee = connection.prepareStatement("INSERT INTO employee VALUES (DEFAULT, ?, ?, ?, ?)");
 
+          
             addEmployee.setString(1, employee.getLogin());
             addEmployee.setString(2, employee.getEncryptedPassword());
-            addEmployee.setBytes(3, employee.getPasswordSalt());
+            addEmployee.setBytes(3,  employee.getPasswordSalt());
             addEmployee.setString(4, employee.getRole());
 
             addEmployee.execute();
             return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+            
+        } catch (SQLException e) { e.printStackTrace(); } 
+        finally {
             try { connection.close(); addEmployee.close(); } 
             catch (SQLException e1) { e1.printStackTrace(); }
         }
+        return false;
+
+    }
+
+    /**
+     * 
+     */
+    public boolean deleteEmployee(int id) {
+        Connection connection = establishConnection();
+        PreparedStatement deleteEmployee = null;
+
+        try {
+            deleteEmployee = connection.prepareStatement("DELETE FROM employee WHERE id = ?");
+            deleteEmployee.setInt(1, id);
+            deleteEmployee.execute(); 
+        } catch (SQLException e) {
+
+        }
+
+
+
+
         return false;
     }
 

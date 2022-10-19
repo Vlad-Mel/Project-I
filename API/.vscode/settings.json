@@ -2,7 +2,9 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
         "apibuilder",
+        "BYTEA",
         "DTOs",
+        "Elon",
         "Hmac",
         "javalin",
         "Jwts"
