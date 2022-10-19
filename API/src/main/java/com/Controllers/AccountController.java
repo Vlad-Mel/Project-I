@@ -2,10 +2,9 @@ package com.Controllers;
 
 import com.DTOs.EmployeeDto;
 import com.Database.EmployeeDAO;
-import com.ErrorHandlers.ErrorMessage;
+import com.ErrorHandlers.MessageResponse;
 import com.Models.Employee;
 import com.Utilities.PasswordUtility;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -23,13 +22,13 @@ public class AccountController {
             /* If a user already exists in database return */
             if (employeeDAO.findAnEmployee(employeeDto.login) != null) {
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.json(new ErrorMessage("User already exists in Database"));
+                ctx.json(new MessageResponse("User already exists in Database"));
                 return;
             }
 
             if (employeeDto.login.isEmpty() || employeeDto.password.isEmpty()) {
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.json(new ErrorMessage("Login and/or password field is/are empty."));
+                ctx.json(new MessageResponse("Login and/or password field is/are empty."));
                 return;
             }
             
@@ -42,7 +41,7 @@ public class AccountController {
         } catch (Exception e) {
             System.err.println(e);
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Unresolved error."));
+            ctx.json(new MessageResponse("Unresolved error."));
         }
     }
 
@@ -57,7 +56,7 @@ public class AccountController {
             /* If no employee found, return */
             if (employee == null) {
                 ctx.status(HttpStatus.UNAUTHORIZED);
-                ctx.json(new ErrorMessage("The user does not exist"));
+                ctx.json(new MessageResponse("The user does not exist"));
                 return;
             }
 
@@ -74,11 +73,11 @@ public class AccountController {
 
             /* Response */
             ctx.status(HttpStatus.UNAUTHORIZED);
-            ctx.json(new ErrorMessage("The user's password is wrong. Try again."));
+            ctx.json(new MessageResponse("The user's password is wrong. Try again."));
         } catch (Exception e) {
             System.err.println(e);
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Unresolved error."));
+            ctx.json(new MessageResponse("Unresolved error."));
         }
     }
 
@@ -87,9 +86,10 @@ public class AccountController {
             /* Trying to remove JWT token from Cookie storage */
             ctx.removeCookie("token");
             ctx.status(HttpStatus.OK);
+            ctx.json(new MessageResponse("Successfully logged out. Bye!", "notification"));
         } catch (Exception e) {
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Cannot logout."));
+            ctx.json(new MessageResponse("Cannot logout."));
         }
         
     }

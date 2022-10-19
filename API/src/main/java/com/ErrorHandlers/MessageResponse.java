@@ -1,26 +1,26 @@
 package com.ErrorHandlers;
 
-public class ErrorMessage {
-    private String error;
+public class MessageResponse {
+    private String type;
     private String message;
 
-    public ErrorMessage() {}
+    public MessageResponse() {}
 
-    public ErrorMessage(String message) {
-        this.error = "error";
+    public MessageResponse(String message) {
+        this.type = "error";
         this.message = message;
     }
 
-    public ErrorMessage(String message, String error) {
+    public MessageResponse(String message, String type) {
         this.message = message;
-        this.error = error;
+        this.type = type;
     }
     
     public void setMessage(String message) { this.message = message; }
-    public void setError(String error) { this.error = error; }
+    public void setType(String type) { this.type = type; }
 
     public String getMessage() { return message; }
-    public String getError() { return error; }
+    public String getType() { return type; }
     
 
     @Override
@@ -28,7 +28,7 @@ public class ErrorMessage {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((message == null) ? 0 : message.hashCode());
-        result = prime * result + ((error == null) ? 0 : error.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
@@ -40,16 +40,16 @@ public class ErrorMessage {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ErrorMessage other = (ErrorMessage) obj;
+        MessageResponse other = (MessageResponse) obj;
         if (message == null) {
             if (other.message != null)
                 return false;
         } else if (!message.equals(other.message))
             return false;
-        if (error == null) {
-            if (other.error != null)
+        if (type == null) {
+            if (other.type != null)
                 return false;
-        } else if (!error.equals(other.error))
+        } else if (!type.equals(other.type))
             return false;
         return true;
     }
