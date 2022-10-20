@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import com.DTOs.TicketDto;
 import com.Database.EmployeeDAO;
 import com.Database.TicketDAO;
-import com.ErrorHandlers.ErrorMessage;
+import com.ErrorHandlers.MessageResponse;
 import com.Interfaces.ITicketController;
 import com.Models.Employee;
 import com.Models.Ticket;
@@ -28,19 +28,19 @@ public class TicketController implements ITicketController {
 
             if (employee == null) {
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.json(new ErrorMessage("User does not exist."));
+                ctx.json(new MessageResponse("User does not exist."));
                 return;
             }
             
             if (ticketDto.amount <= 0 ) {
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.json(new ErrorMessage("The reimbursement cost cannot be less or equal to 0."));
+                ctx.json(new MessageResponse("The reimbursement cost cannot be less or equal to 0."));
                 return;
             }
 
             if (ticketDto.description.length() < 5 ) {
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.json(new ErrorMessage("The description is too short. It can be at least 5 symbols of length."));
+                ctx.json(new MessageResponse("The description is too short. It can be at least 5 symbols of length."));
                 return;
             }
 
@@ -53,7 +53,7 @@ public class TicketController implements ITicketController {
         } catch (Exception e) {
             System.err.println(e);
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Unresolved error."));
+            ctx.json(new MessageResponse("Unresolved error."));
         }
     }
 
@@ -68,7 +68,7 @@ public class TicketController implements ITicketController {
             ctx.json(tickets);
             return;
         }
-        ctx.json(new ErrorMessage("No more pending request tickets left", "notification"));
+        ctx.json(new MessageResponse("No more pending request tickets left", "notification"));
     }
 
     public void getEmployeeTickets(Context ctx) {
@@ -81,7 +81,7 @@ public class TicketController implements ITicketController {
             ctx.status(HttpStatus.OK);
         } catch (Exception e) {
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Unresolved error."));
+            ctx.json(new MessageResponse("Unresolved error."));
         }
     }
     

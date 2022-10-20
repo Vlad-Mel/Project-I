@@ -3,13 +3,14 @@ package com.Controllers;
 import com.DTOs.EmployeeDto;
 import com.Database.EmployeeDAO;
 import com.ErrorHandlers.MessageResponse;
+import com.Interfaces.IAccountController;
 import com.Models.Employee;
 import com.Utilities.PasswordUtility;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
-public class AccountController {
+public class AccountController implements IAccountController {
 
     /* Database Access Object of Employee */
     EmployeeDAO employeeDAO = new EmployeeDAO();
@@ -44,7 +45,6 @@ public class AccountController {
             ctx.json(new MessageResponse("Unresolved error."));
         }
     }
-
 
     public void login(Context ctx) {
         try {
@@ -84,9 +84,15 @@ public class AccountController {
     public void logout(Context ctx) {
         try {
             /* Trying to remove JWT token from Cookie storage */
+            if (ctx.cookie("token") == null) {
+                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.json(new MessageResponse("You have to log in before to try logout."));    
+                return;
+            }
+
             ctx.removeCookie("token");
             ctx.status(HttpStatus.OK);
-            ctx.json(new MessageResponse("Successfully logged out. Bye!", "notification"));
+            ctx.json(new MessageResponse("Successfully logged out. Bye!", "notification"));    
         } catch (Exception e) {
             ctx.status(HttpStatus.UNKNOWN);
             ctx.json(new MessageResponse("Cannot logout."));

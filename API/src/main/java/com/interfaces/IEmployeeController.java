@@ -8,8 +8,6 @@ public interface IEmployeeController {
 
     void getAnEmployee(Context ctx);
 
-    void deleteAnEmployee (Context ctx);
-
     void updateAnEmployee (Context ctx);
 
 }

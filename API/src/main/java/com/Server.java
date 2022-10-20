@@ -10,7 +10,7 @@ import com.Controllers.ManagerController;
 import com.Controllers.SecurityController;
 import com.Controllers.TicketController;
 import com.Database.InitializationDAO;
-import com.ErrorHandlers.ErrorMessage;
+import com.ErrorHandlers.MessageResponse;
 import com.Services.CookieService;
 
 
@@ -45,7 +45,6 @@ public class Server {
     
                         get(employeeController::getAnEmployee);
                         // post(employeeController::updateAnEmployee);
-                        // delete(employeeController::deleteAnEmployee);
 
 
                         path("tickets", () -> {
@@ -72,16 +71,28 @@ public class Server {
                     get(accountController::logout);
                 });
 
-                path("tickets", () -> {
+                path("managers", () -> {
                     before(SecurityController::onlyManagersRoute);
 
-                    get(ticketController::getAllPendingTickets);
-                    post(managerController::updateTicketStatus);
+                    path("tickets", () -> {
+    
+                        get(ticketController::getAllPendingTickets);
+                        post(managerController::updateTicketStatus);
+    
+                    });
 
+                    path("promote", () -> {
+                        post(managerController::promoteToManager);
+                    });
+                });
+                
+
+                path("allTickets", () -> {
+                    get(ticketController::getAllTickets);
                 });
 
                 path("unauthorized", () -> {
-                    get(ctx -> ctx.json(new ErrorMessage("Not authorized")));
+                    get(ctx -> ctx.json(new MessageResponse("Not authorized")));
                 });
             });
         });

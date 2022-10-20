@@ -2,7 +2,7 @@ package com.Controllers;
 
 import com.DTOs.EmployeeDto;
 import com.Database.EmployeeDAO;
-import com.ErrorHandlers.ErrorMessage;
+import com.ErrorHandlers.MessageResponse;
 import com.Interfaces.IEmployeeController;
 import com.Models.Employee;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +24,7 @@ public class EmployeeController implements IEmployeeController{
         } catch (Exception e) {
             System.err.println(e);
             ctx.status(HttpStatus.UNKNOWN);
-            ctx.json(new ErrorMessage("Unresolved error."));
+            ctx.json(new MessageResponse("Unresolved error."));
         }
         
     }
@@ -38,45 +38,26 @@ public class EmployeeController implements IEmployeeController{
             ctx.status(HttpStatus.OK);
         } catch (Exception e) {
             ctx.status(HttpStatus.BAD_REQUEST);
-            ctx.json(new ErrorMessage("Invalid ID number"));
+            ctx.json(new MessageResponse("Invalid ID number"));
         }
     }
 
     @Override
-    public void deleteAnEmployee (Context ctx) {
-        // try {
-        //     int employeeId = Integer.parseInt(ctx.pathParam("id"));
-
-        //     if (employeeDAO.findAnEmployee(employeeId) == null) {
-        //         ctx.status(HttpStatus.BAD_REQUEST);
-        //         ctx.json(new ErrorMessage("User does not exist."));
-        //         return;
-        //     }
-            
-        //     ctx.json(employeeDAO.deleteEmployee(employeeId));
-        // } catch (Exception e) {
-        //     ctx.status(HttpStatus.BAD_REQUEST);
-        //     ctx.json(new ErrorMessage("Invalid ID number"));
-        // }  
-    }
-
-    @Override
     public void updateAnEmployee (Context ctx) {
-        // int employeeId = Integer.parseInt(ctx.pathParam("id"));
-        // //Employee employeeToUpdate = DatabaseLike.employees.get(employeeId);
+        int employeeId = Integer.parseInt(ctx.pathParam("id"));
         
-        // try {
-        //     ObjectMapper objectMapper = new ObjectMapper();
-        //     EmployeeDto employeeDto = objectMapper.readValue(ctx.body(), EmployeeDto.class);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            EmployeeDto employeeDto = objectMapper.readValue(ctx.body(), EmployeeDto.class);
             
-        //     /* Replace existed employee with new one in DB */
+            /* Replace existed employee with new one in DB */
 
-        // } catch (JsonMappingException e) {
-        //     e.printStackTrace();
-        // } catch (JsonProcessingException e) {
-        //     e.printStackTrace();
-        // }
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         
-        // ctx.json(ctx.body());
+        ctx.json(ctx.body());
     }
 }

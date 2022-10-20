@@ -129,8 +129,7 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO  {
 
         return null;
     }
-
-    
+   
 
 
     /**
@@ -163,26 +162,27 @@ public class EmployeeDAO extends ConnectionFactory implements IEmployeeDAO  {
 
     }
 
-    /**
-     * 
-     */
-    public boolean deleteEmployee(int id) {
+
+    public boolean updateEmployeeRole(int id, String role) {
         Connection connection = establishConnection();
-        PreparedStatement deleteEmployee = null;
+        String SQL = "UPDATE employee SET employee_role = ? WHERE employee_id = ?";
+        PreparedStatement updateEmployeeRole = null;
 
         try {
-            deleteEmployee = connection.prepareStatement("DELETE FROM employee WHERE id = ?");
-            deleteEmployee.setInt(1, id);
-            deleteEmployee.execute(); 
+            updateEmployeeRole = connection.prepareStatement(SQL);
+
+            updateEmployeeRole.setString(1, role.toLowerCase());
+            updateEmployeeRole.setInt(2, id);
+            
+            updateEmployeeRole.executeUpdate();
+            return true;
         } catch (SQLException e) {
-
+            e.printStackTrace();
+        } finally {
+            try { updateEmployeeRole.close(); connection.close(); } 
+            catch (SQLException e) { e.printStackTrace();}
         }
-
-
-
-
         return false;
+
     }
-
-
 }
